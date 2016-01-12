@@ -1,0 +1,9 @@
+REQUIREMENTS:
+1. Linux System to run a server.
+2. Android device with sdk 18 or greater to run apk.
+
+NOTE:
+1. If using windows system please specify the folder to save the file in serverApp.java
+2. Please specify the server ip-address in android program as it is hardcoded in the program.
+3. The values are stored in sdcard0 in internal memory of mobile. It can be seen in fileManager and it is stored as a csv file.
+4. UTF-8 encoding is used to encode the csv file. To read it in coloum format please specify the format.
