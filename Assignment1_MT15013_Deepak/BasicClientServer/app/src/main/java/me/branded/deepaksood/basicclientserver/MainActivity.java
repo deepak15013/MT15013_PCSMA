@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float valueZ = 0;
 
     private float timeStamp = 0;
-    boolean flag = true;
+    boolean startFlag = false;
+    boolean stopFlag = false;
 
     FileWriter writer;
     File file=null;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 StartAcceleromter();
 
                 generateCsvFile("Values.csv");
+                startFlag=true;
 
             }
         });
@@ -75,8 +77,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Stop Pressed", Toast.LENGTH_SHORT).show();
-                StopAcceleromter();
+
+                if(startFlag) {
+                    stopFlag=true;
+                    Toast.makeText(MainActivity.this, "Stop Pressed", Toast.LENGTH_SHORT).show();
+                    StopAcceleromter();
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "Please press start", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -87,7 +96,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if(file == null) {
                     Toast.makeText(MainActivity.this, "No file present to send. Please first press Start", Toast.LENGTH_SHORT).show();
                 }
-                else {
+                else if(stopFlag == false) {
+                    Toast.makeText(MainActivity.this, "Please press stop", Toast.LENGTH_SHORT).show();
+                } else {
                     Toast.makeText(MainActivity.this, "File Sent", Toast.LENGTH_SHORT).show();
                     sendFile sendfile = new sendFile();
                     sendfile.execute();
@@ -174,20 +185,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
-            if(flag) {
-                //Toast.makeText(MainActivity.this, "Accelerometer present", Toast.LENGTH_SHORT).show();
-                flag=false;
-            }
-
         }
         else {
-
-            if(flag) {
-                Toast.makeText(MainActivity.this, "Sorry! Accelerometer not present", Toast.LENGTH_SHORT).show();
-                flag=false;
-            }
+            Toast.makeText(MainActivity.this, "Sorry! Accelerometer not present", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     /* Checks if external storage is available for read and write */
     public boolean isExternalStorageWritable() {
